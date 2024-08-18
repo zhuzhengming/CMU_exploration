@@ -1,0 +1,8 @@
+prefix=/home/zhuzhengming/workspace/two_ws/src/mid_layer/src/exploration_go2/build/devel
+
+Name: exploration_go2
+Description: Description of exploration_go2
+Version: 0.0.1
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

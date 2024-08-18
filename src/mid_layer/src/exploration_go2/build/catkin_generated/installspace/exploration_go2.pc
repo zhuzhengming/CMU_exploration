@@ -1,0 +1,8 @@
+prefix=/usr/local
+
+Name: exploration_go2
+Description: Description of exploration_go2
+Version: 0.0.1
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

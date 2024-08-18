@@ -1,0 +1,82 @@
+<launch>
+
+  <!-- Arguments -->
+  <arg name="world_name" default="indoor"/>
+  <arg name="cameraOffsetZ" default="0"/>
+  <arg name="vehicleX" default="0"/>
+  <arg name="vehicleY" default="0"/>
+  <arg name="checkTerrainConn" default="false"/>
+  <arg name="slam"  default="fast-lio"  doc="opt: fast-lio, lio-sam"/>
+  <arg name="rviz_mid_layer" default="false"/>
+  <arg name="metrics" default="true"/>
+  <arg name="slam_record" default="true"/>
+
+
+  <group if="$(eval arg('slam') == 'fast-lio')">
+    <!--Livox MID360 Driver-->
+    <include file="$(find livox_ros_driver2)/launch_ROS1/msg_MID360.launch" />
+
+    <!-- fast-lio mapping -->
+    <include file="$(find fast_lio)/launch/mapping_mid360.launch" />
+
+     <!-- SLAM interface-->
+    <include file="$(find slam_interface)/launch/fast_lio_interface.launch" />
+
+    <node pkg="tf2_ros" type="static_transform_publisher" name="tf_pub_2" args="0 0 0 0 0 0 camera_init map" />
+
+  </group>
+
+  <group if="$(eval arg('slam') == 'lio-sam')">
+    <!--XT-16 Driver-->
+    <include file="$(find hesai_lidar)/launch/hesai_lidar.launch">
+        <arg name="lidar_type" value="PandarXT-16"/>
+        <!-- <arg name="frame_id" value="gml"/> -->
+        <!-- <arg name="frame_id" value="PandarXT-16"/> -->
+        <arg name="pcldata_type" value="0"/>
+    </include>
+
+    <!-- lio-sam mapping -->
+    <include file="$(find lio_sam_6axis)/launch/hilti_pandar_jin.launch" />
+    <!-- SLAM interface-->
+    <include file="$(find slam_interface)/launch/lio_sam_interface.launch" />
+  </group>
+
+  <!-- local planner and pathfollower -->
+  <include file="$(find local_planner)/launch/local_planner.launch" >
+    <arg name="cameraOffsetZ" value="$(arg cameraOffsetZ)"/>
+    <arg name="goalX" value="$(arg vehicleX)"/>
+    <arg name="goalY" value="$(arg vehicleY)"/>
+  </include>
+
+  <!-- terrain analysis and extention -->
+  <include file="$(find terrain_analysis)/launch/terrain_analysis.launch" />
+  <include file="$(find terrain_analysis_ext)/launch/terrain_analysis_ext.launch" >
+    <arg name="checkTerrainConn" value="$(arg checkTerrainConn)"/>
+  </include>
+
+  <!-- sensor process -->
+  <include file="$(find sensor_scan_generation)/launch/sensor_scan_generation.launch" />
+
+
+  <!-- TARE planner -->
+  <include file="$(find tare_planner)/launch/explore.launch" />
+
+  <group if="$(eval arg('rviz_mid_layer') == 'true')">
+    <node launch-prefix="nice" pkg="rviz" type="rviz" name="rvizGA" args="-d $(find exploration_go2)/rviz/go2.rviz" respawn="true"/>
+  </group>
+
+  <!-- <group if="$(eval arg('metrics') == 'true')"> -->
+      <!-- visualization tool -->
+    <include file="$(find visualization_tools)/launch/visualization_tools.launch" >
+      <arg name="world_name" value="$(arg world_name)"/>
+    </include>
+  <!-- </group> -->
+
+  <!-- <group if="$(eval arg('slam_record') == 'true')"> -->
+    <include file="$(find exploration_go2)/launch/gml_record.launch" />
+  <!-- </group> -->
+
+
+
+  <!-- <node pkg="tf2_ros" type="static_transform_publisher" name="tf_pub_1" args="0.01 0.01 0.01 0 0 0 base_footprint sensor" /> -->
+</launch>

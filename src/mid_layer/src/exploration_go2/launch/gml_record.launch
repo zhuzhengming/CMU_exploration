@@ -1,0 +1,92 @@
+<launch>
+    <!-- 启动RealSense相机 -->
+    <include file="$(find realsense2_camera)/launch/rs_camera_gml.launch">
+        <arg name="depth_width"  value="848"/>
+        <arg name="depth_height" value="480"/>
+        <arg name="enable_depth" value="true"/>
+
+        <!-- <arg name="infra_width"  value="424"/>
+        <arg name="infra_height" value="240"/> -->
+        <arg name="infra_width"  value="848"/>
+        <arg name="infra_height" value="480"/>
+        <arg name="enable_infra" value="true"/>
+        <arg name="enable_infra1" value="true"/>
+        <arg name="enable_infra2" value="true"/>
+
+        <!-- <arg name="enable_infra" value="false"/>
+        <arg name="enable_infra1" value="false"/>
+        <arg name="enable_infra2" value="false"/> -->
+
+        <arg name="color_width"         value="848"/>
+        <arg name="color_height"        value="480"/>
+        <arg name="enable_color"        value="true"/>
+
+        <!-- <arg name="align_depth"         value="true"/> -->
+
+        <arg name="depth_fps"           value="15"/>
+        <!-- <arg name="infra_fps"           default="30"/> -->
+        <arg name="infra_fps"           value="15"/>
+        <!-- <arg name="color_fps"           default="-1"/> -->
+        <arg name="color_fps"           value="15"/>
+    </include>
+
+        <!--  结构光开关 -->
+<!--         <arg name="emitter_enable"  default="false"/> -->
+<!--          --><!-- rosparam set /camera/stereo_module/emitter_enabled false -->
+<!--         <rosparam> -->
+<!--         /camera/stereo_module/emitter_enabled: 0 -->
+<!--         </rosparam> -->
+
+<!--         <rosparam if="$(arg emitter_enable)"> -->
+<!--         /camera/stereo_module/emitter_enabled: 1 -->
+<!--         </rosparam> -->
+
+    <!-- </include> -->
+
+    <!-- 启动禾赛 XT16 雷达 launch 文件 -->
+    <include file="$(find hesai_lidar)/launch/hesai_lidar.launch">
+        <arg name="lidar_type" value="PandarXT-16"/>
+        <arg name="frame_id" value="gml"/>
+        <!-- <arg name="frame_id" value="PandarXT-16"/> -->
+        <arg name="pcldata_type" value="0"/>
+    </include>
+
+
+    <!-- 设置包的路径和名称 -->
+    <arg name="bag_path" default="$(find exploration_go2)/bag/"/>
+    <!-- <arg name="bag_name" default="$(arg bag_path)$(arg timestamp)_gml.bag"/> -->
+    <arg name="bag_name" default="$(arg bag_path)gml.bag"/>
+    <!-- <arg name="bag_name" default="$(arg bag_path)"/> -->
+
+    <!-- 设置待录制的话题 -->
+    <arg name="topics_to_record" default="
+    /hesai/pandar
+    /livox/lidar
+    /livox/imu
+    /camera/color/image_raw 
+    /camera/infra1/image_rect_raw 
+    /camera/infra2/image_rect_raw
+    /camera/depth/image_rect_raw
+    "
+    />
+
+
+
+
+<!--     /camera/aligned_depth_to_color/image_raw  -->
+<!--     /camera/depth/image_rect_raw /camera/imu -->
+
+    <!-- 录制雷达和IMU数据 -->
+    <!-- -o 加时间戳，-O 不加时间戳 -->
+    <node pkg="rosbag" type="record" name="record_bag" output="screen"
+            args="-o $(arg bag_name) $(arg topics_to_record)
+            "
+            >
+    </node>
+
+<!--       --><!-- 打印待录制的话题 -->
+<!--     <node pkg="gml_launch" type="print_topics.py" name="print_topics_node" output="screen"> -->
+<!--         <param name="topics" value="$(arg topics_to_record)"/> -->
+<!--     </node> -->
+
+</launch>

@@ -1,0 +1,28 @@
+<launch>
+
+    <arg name="project" default="lio_sam_6axis"/>
+
+    <!-- 将GML采集的雷达与IMU数据同步后，再转换hesai的话题到velodyne的话题 -->
+
+    <node pkg="$(arg project)" type="$(arg project)_sensorsSync" name="$(arg project)_sensorsSync" output="screen"/>
+
+    <!-- Parameters -->
+<!--     <rosparam file="$(find lio_sam)/config/params.yaml" command="load" /> -->
+    <rosparam file="$(find lio_sam_6axis)/config/params_vlp_jin.yaml" command="load"/>
+
+    <include file="$(find hesai_to_velodyne)/launch/hesai_to_velodyne.launch" />
+
+    <!--- LOAM -->
+    <include file="$(find lio_sam_6axis)/launch/include/module_loam.launch" />
+
+    <!--- Robot State TF -->
+    <include file="$(find lio_sam_6axis)/launch/include/module_robot_state_publisher.launch" />
+
+    <!--- Run Navsat -->
+    <include file="$(find lio_sam_6axis)/launch/include/module_navsat.launch" />
+
+    <!--- Run Rviz-->
+<!--     <include file="$(find lio_sam_6axis)/launch/include/module_rviz.launch" /> -->
+    <include file="$(find lio_sam_6axis)/launch/include/module_rviz_jin.launch" />
+
+</launch>
