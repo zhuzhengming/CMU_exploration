@@ -1,0 +1,33 @@
+
+<launch>
+
+  <!-- Arguments -->
+  <arg name="env"  default="none"  doc="opt: campus, forest, garage, indoor, tunnel"/>
+
+
+  <group if="$(eval arg('env') == 'campus')">
+   <include file="$(find vehicle_simulator)/launch/system_campus.launch" />
+   <include file="$(find tare_planner)/launch/explore_campus.launch" />
+  </group>
+
+  <group if="$(eval arg('env') == 'forest')">
+   <include file="$(find vehicle_simulator)/launch/system_forest.launch" />
+   <include file="$(find tare_planner)/launch/explore_forest.launch" />
+  </group>
+
+  <group if="$(eval arg('env') == 'garage')">
+   <include file="$(find vehicle_simulator)/launch/system_garage.launch" />
+   <include file="$(find tare_planner)/launch/explore_garage.launch" />
+  </group>
+
+  <group if="$(eval arg('env') == 'indoor')">
+   <include file="$(find vehicle_simulator)/launch/system_indoor.launch" />
+   <include file="$(find tare_planner)/launch/explore_indoor.launch" />
+  </group>
+
+  <group if="$(eval arg('env') == 'tunnel')">
+   <include file="$(find vehicle_simulator)/launch/system_tunnel.launch" />
+   <include file="$(find tare_planner)/launch/explore_tunnel.launch" />
+  </group>
+
+</launch>
