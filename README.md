@@ -75,3 +75,13 @@
       - robots size
       - obstacleHeightThre
       - kUseMomentum
+  
+- #### For Unitree GO2 platform
+
+  - Run directly the script under workspace/src
+
+  ```bash
+  ./run.sh
+  ```
+
+  ####  
