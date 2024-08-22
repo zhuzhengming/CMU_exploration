@@ -29,7 +29,7 @@ help () {
 
 FILENAME="./metrics.csv"
 INTERVAL=0.5
-VERBOSE=false
+VERBOSE=true
 
 while [ $# -gt 0 ]; do
   case $1 in
@@ -70,7 +70,13 @@ echo "timestamp, cpu, mem" > $FILENAME
 while true; do
   timestamp=$(date +"%b %d %H:%M:%S")
   cpu_usage=$(ps axo %cpu | awk '{ sum+=$1 } END { printf "%.1f\n", sum }' | tail -n 1)
-  mem_usage=$(free | awk '/Mem:/ { printf "%.1f\n", $3 / $2 * 100 }')
+  mem_usage=$(free | awk 'NR==2{ printf "%.1f\n", $3 / $2 * 100 }')
+  
+   # Check if mem_usage calculation is successful
+  if [ -z "$mem_usage" ]; then
+    mem_usage="N/A"
+  fi
+  
   echo "$timestamp, $cpu_usage, $mem_usage" >> $FILENAME 
   if [ $VERBOSE = true ]; then
     echo "$timestamp, CPU:$cpu_usage, MEM:$mem_usage"

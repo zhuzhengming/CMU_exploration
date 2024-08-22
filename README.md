@@ -22,9 +22,11 @@
 
   - Run a script to download simulation environments (~500MB). This may take several minutes. If the script does not start the download, users can download the [simulation environments](https://drive.google.com/file/d/1GMT8tptb3nAb87F8eFfmIgjma6Bu0reV/view?usp=sharing) and unzip the files to 'src/vehicle_simulator/meshes'.
 
-    - ```bash
-      ./src/vehicle_simulator/mesh/download_environments.sh
-      ```
+    ```bash
+    ./src/vehicle_simulator/mesh/download_environments.sh
+    ```
+
+    
 
   - Run the simulation of mid-layer to check whether it works well or not:
 
@@ -57,6 +59,8 @@
   roslaunch exploration_go2 GO2.launch slam:=fast-lio metrics:=true slam_record:=true
   ```
 
+- ##### Record and Play rosbag
+
   
 
 - ##### Important parameters:
@@ -76,12 +80,21 @@
       - obstacleHeightThre
       - kUseMomentum
   
-- #### For Unitree GO2 platform
+- ##### For Unitree GO2 platform
 
-  - Run directly the script under workspace/src
+  - Run directly the script in workspace/src/scripts
 
   ```bash
   ./run.sh
   ```
 
-  ####  
+- ##### CPU and Memory metrics
+
+  - Run the script in workspace/src/scripts
+
+  ```bash
+  ./CPU_metrics.sh
+  ```
+
+  
+
